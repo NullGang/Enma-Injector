@@ -1,0 +1,12 @@
+C:\Users\hugof\OneDrive\Documentos\inj\Enma Injector\bin\Debug\Enma Injector.exe.config
+C:\Users\hugof\OneDrive\Documentos\inj\Enma Injector\bin\Debug\Enma Injector.exe
+C:\Users\hugof\OneDrive\Documentos\inj\Enma Injector\bin\Debug\Enma Injector.pdb
+C:\Users\hugof\OneDrive\Documentos\inj\Enma Injector\bin\Debug\Guna.UI.dll
+C:\Users\hugof\OneDrive\Documentos\inj\Enma Injector\obj\Debug\Enma Injector.csproj.AssemblyReference.cache
+C:\Users\hugof\OneDrive\Documentos\inj\Enma Injector\obj\Debug\Enma_Injector.Form1.resources
+C:\Users\hugof\OneDrive\Documentos\inj\Enma Injector\obj\Debug\Enma_Injector.Properties.Resources.resources
+C:\Users\hugof\OneDrive\Documentos\inj\Enma Injector\obj\Debug\Enma Injector.csproj.GenerateResource.cache
+C:\Users\hugof\OneDrive\Documentos\inj\Enma Injector\obj\Debug\Enma Injector.csproj.CoreCompileInputs.cache
+C:\Users\hugof\OneDrive\Documentos\inj\Enma Injector\obj\Debug\Enma Injector.csproj.CopyComplete
+C:\Users\hugof\OneDrive\Documentos\inj\Enma Injector\obj\Debug\Enma Injector.exe
+C:\Users\hugof\OneDrive\Documentos\inj\Enma Injector\obj\Debug\Enma Injector.pdb
