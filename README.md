@@ -21,6 +21,7 @@ E.N.I.N (ENma INjector) is a tool that provides help installing mods on Yo-Kai W
 - Beautiful and intuitive UI.
 - Open Source.
 - Signing APK for correct use.
+- Multiple APK selection.
 
 ## Installation
 
