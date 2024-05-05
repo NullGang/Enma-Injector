@@ -15,6 +15,7 @@ namespace Enma_Injector
 
         string settingsvolume = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "assets", "config");
         string destino = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "apktool", "ywapk");
+        List<string> list = new List<string>();
         public Form1()
         {
             InitializeComponent();
@@ -61,29 +62,74 @@ namespace Enma_Injector
         {
             SoundPlayer player = new SoundPlayer(Application.StartupPath + "/assets/music/btn_sound.wav");
             player.Play();
-            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+           if(gunaCheckBox1.Checked == true)
             {
-                string archivoSeleccionado = openFileDialog1.FileName;
-                string nombreArchivo = Path.GetFileNameWithoutExtension(archivoSeleccionado);
-                string destinoCarpeta = Path.Combine(Application.StartupPath, "apktool");
-                string destino = Path.Combine(destinoCarpeta, "ywapk.apk");
-
-                if(!File.Exists(destino))
+                openFileDialog1.Multiselect = true;
+               
+                if (openFileDialog1.ShowDialog() == DialogResult.OK)
                 {
-                    File.Copy(archivoSeleccionado, destino, true);
+                    foreach (string filename in openFileDialog1.FileNames)
+                    {
+                        string normalname = Path.GetFileName(filename).Replace(".apk", "");
+                        string randomName = Path.GetFileNameWithoutExtension(normalname).Replace(" ", "_");
+                        string fileExtension = Path.GetExtension(filename);
+                        string newFileName = randomName + ".apk";
+
+                        string targetFolderPath = Path.Combine(Application.StartupPath, "apktool");
+
+                       
+                        string targetFilePath = Path.Combine(targetFolderPath, newFileName);
+
+                        try
+                        {
+                            File.Copy(filename, targetFilePath);
+                            ProcessStartInfo processStart = new ProcessStartInfo();
+                            processStart.FileName = "cmd.exe";
+                            processStart.WindowStyle = ProcessWindowStyle.Normal;
+                            processStart.Arguments = @"/k cd apktool && apktool.bat d -f "+ newFileName + " && exit";
+                            Process.Start(processStart);
+                            list.Add(Path.GetFileNameWithoutExtension(randomName.Replace(".apk", "")));
+                            gunaAdvenceButton3.Enabled = true;
+                            gunaAdvenceButton1.Enabled = false;
+                        }
+                        catch (IOException ex)
+                        {
+                            MessageBox.Show("Error coping the files: " + ex.Message); 
+                            gunaAdvenceButton3.Enabled = false;
+                            gunaAdvenceButton1.Enabled = true;
+                        }
+                        
+                    }
+                    //Process.Start("explorer.exe", Application.StartupPath + "/apktool/");
+
                 }
+            } else
+            {
+                if (openFileDialog1.ShowDialog() == DialogResult.OK)
+                {
+                    string archivoSeleccionado = openFileDialog1.FileName;
+                    string nombreArchivo = Path.GetFileNameWithoutExtension(archivoSeleccionado);
+                    string destinoCarpeta = Path.Combine(Application.StartupPath, "apktool");
+                    string destino = Path.Combine(destinoCarpeta, "ywapk.apk");
+
+                    if (!File.Exists(destino))
+                    {
+                        File.Copy(archivoSeleccionado, destino, true);
+                    }
 
 
-                ProcessStartInfo processStart = new ProcessStartInfo();
-                processStart.FileName = "cmd.exe";
-                processStart.WindowStyle = ProcessWindowStyle.Normal;
-                processStart.Arguments = @"/k cd apktool && apktool.bat d -f ywapk.apk && exit";
-                Process.Start(processStart);
-                gunaAdvenceButton3.Enabled = true;
-                gunaAdvenceButton1.Enabled = false;
-                //Process.Start("explorer.exe", Application.StartupPath + "/apktool/");
-                
+                    ProcessStartInfo processStart = new ProcessStartInfo();
+                    processStart.FileName = "cmd.exe";
+                    processStart.WindowStyle = ProcessWindowStyle.Normal;
+                    processStart.Arguments = @"/k cd apktool && apktool.bat d -f ywapk.apk && exit";
+                    Process.Start(processStart);
+                    gunaAdvenceButton3.Enabled = true;
+                    gunaAdvenceButton1.Enabled = false;
+                    //Process.Start("explorer.exe", Application.StartupPath + "/apktool/");
+
+                }
             }
+            
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -109,11 +155,26 @@ namespace Enma_Injector
         {
             SoundPlayer player = new SoundPlayer(Application.StartupPath + "/assets/music/btn_sound.wav");
             player.Play();
-            ProcessStartInfo processStart = new ProcessStartInfo();
+            if(gunaCheckBox1.Checked == true)
+            {
+
+                    foreach(string filename in list)
+                    {
+                        ProcessStartInfo processStart = new ProcessStartInfo();
+                        processStart.FileName = "cmd.exe";
+                        processStart.WindowStyle = ProcessWindowStyle.Normal;
+                        processStart.Arguments = @"/k cd ./apktool && apktool b " + filename + " && exit";
+                        Process.Start(processStart);
+                    }
+                
+            } else
+            {
+                ProcessStartInfo processStart = new ProcessStartInfo();
                 processStart.FileName = "cmd.exe";
                 processStart.WindowStyle = ProcessWindowStyle.Normal;
                 processStart.Arguments = @"/k cd ./apktool && apktool b ywapk && exit";
                 Process.Start(processStart);
+            }
                 gunaAdvenceButton5.Enabled = true;
                 gunaAdvenceButton4.Enabled = false;
               
@@ -124,11 +185,38 @@ namespace Enma_Injector
         {
             SoundPlayer player = new SoundPlayer(Application.StartupPath + "/assets/music/btn_sound.wav");
             player.Play();
-            ProcessStartInfo processStart = new ProcessStartInfo();
-            processStart.FileName = "cmd.exe";
-            processStart.WindowStyle = ProcessWindowStyle.Normal;
-            processStart.Arguments = @"/k cd ./apktool && java -jar uber-apk-signer.jar --apks ./ywapk/dist/";
-            Process.Start(processStart);
+            if (gunaCheckBox1.Checked == true)
+            {
+                
+                foreach (string filename in list)
+                {
+                    string origen = Application.StartupPath + @"\apktool\" + filename+ @"\dist\";
+                    string destinox = Application.StartupPath + @"\apktool\sign";
+                    if (!Directory.Exists(destinox))
+                    {
+                        Directory.CreateDirectory(destinox);
+                    }
+                    string[] archivosApk = Directory.GetFiles(origen, "*.apk");
+                    foreach (string archivoApk in archivosApk)
+                    {
+                        string nombreArchivo = Path.GetFileName(archivoApk);
+                        string destino = Path.Combine(destinox, nombreArchivo);
+                        File.Move(archivoApk, destino);
+                        ProcessStartInfo processStart = new ProcessStartInfo();
+                        processStart.FileName = "cmd.exe";
+                        processStart.WindowStyle = ProcessWindowStyle.Normal;
+                        processStart.Arguments = @"/k cd ./apktool && java -jar uber-apk-signer.jar --apks ./sign/";
+                        Process.Start(processStart);
+                    }
+                }
+            }else
+            {
+                ProcessStartInfo processStart = new ProcessStartInfo();
+                processStart.FileName = "cmd.exe";
+                processStart.WindowStyle = ProcessWindowStyle.Normal;
+                processStart.Arguments = @"/k cd ./apktool && java -jar uber-apk-signer.jar --apks ./ywapk/dist/";
+                Process.Start(processStart);
+            }
             gunaAdvenceButton1.Enabled = false;
         }
 
@@ -164,12 +252,12 @@ namespace Enma_Injector
                 }
                 else
                 {
-                    Console.WriteLine("Error, route don't exist.");
+                    MessageBox.Show("Error, route don't exist.");
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Error: " + ex.Message);
+                MessageBox.Show("Error: " + ex.Message);
             }
     }
 
@@ -199,6 +287,16 @@ namespace Enma_Injector
         {
             SoundPlayer player = new SoundPlayer(Application.StartupPath + "/assets/music/btn_sound.wav");
             player.Play();
+        }
+
+        private void gunaPictureBox2_Click(object sender, EventArgs e)
+        {
+            Process.Start("https://gamebanana.com/wips/84407");
+        }
+
+        private void gunaPictureBox3_Click(object sender, EventArgs e)
+        {
+            Process.Start("https://github.com/NullGang/Enma-Injector/releases/");
         }
     }
 }
